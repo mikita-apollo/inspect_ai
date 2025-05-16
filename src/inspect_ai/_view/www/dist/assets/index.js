@@ -43969,6 +43969,7 @@ categories: ${categories.join(" ")}`;
       tabPanelsClassName,
       tabControlsClassName,
       tools: tools2,
+      tabsRef,
       children: children2
     }) => {
       const validTabs = flattenChildren(children2);
@@ -43977,6 +43978,7 @@ categories: ${categories.join(" ")}`;
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "ul",
           {
+            ref: tabsRef,
             id,
             className: clsx(
               "nav",
@@ -51588,6 +51590,7 @@ self.onmessage = function (e) {
         id,
         messages,
         initialMessageId,
+        topOffset,
         className: className2,
         toolCallStyle,
         indented: indented2,
@@ -51649,6 +51652,7 @@ self.onmessage = function (e) {
             data: collapsedMessages,
             renderRow,
             initialTopMostItemIndex: initialMessageIndex,
+            offsetTop: topOffset,
             live: running2,
             showProgress: running2,
             components: { Item }
@@ -62146,9 +62150,8 @@ ${events}
       (event) => event.event === "tool" && !event.agent && !event.failed,
       (event) => event.event === "subtask"
     ];
-    const kSampleTabOffset = 31;
     const TranscriptPanel = reactExports.memo((props) => {
-      let { id, scrollRef, events, running: running2, initialEventId } = props;
+      let { id, scrollRef, events, running: running2, initialEventId, topOffset } = props;
       const { eventNodes, defaultCollapsedIds } = useEventNodes(
         events,
         running2 === true
@@ -62159,7 +62162,7 @@ ${events}
           {
             scrollRef,
             className: styles$w.treeContainer,
-            offsetTop: kSampleTabOffset,
+            offsetTop: topOffset,
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               TranscriptOutline,
               {
@@ -62179,7 +62182,7 @@ ${events}
             scrollRef,
             running: running2,
             initialEventId: initialEventId === void 0 ? null : initialEventId,
-            offsetTop: kSampleTabOffset,
+            offsetTop: topOffset,
             className: styles$w.listContainer
           }
         )
@@ -62202,6 +62205,14 @@ ${events}
       const { sampleTabId } = useParams();
       const effectiveSelectedTab = sampleTabId || selectedTab;
       const navigate = useNavigate();
+      const tabsRef = reactExports.useRef(null);
+      const tabsHeight = reactExports.useMemo(() => {
+        if (tabsRef.current) {
+          const height = tabsRef.current.getBoundingClientRect().height;
+          return height;
+        }
+        return -1;
+      }, [tabsRef.current]);
       const sampleSummary = filteredSamples[selectedSampleIndex];
       const sampleEvents = (sample2 == null ? void 0 : sample2.events) || runningSampleData;
       const sampleMessages = reactExports.useMemo(() => {
@@ -62274,6 +62285,7 @@ ${events}
           TabSet,
           {
             id: tabsetId,
+            tabsRef,
             className: clsx(styles$C.tabControls),
             tabControlsClassName: clsx("text-size-base"),
             tabPanelsClassName: clsx(styles$C.tabPanel),
@@ -62294,6 +62306,7 @@ ${events}
                       id: `${baseId}-transcript-display-${id}`,
                       events: sampleEvents || [],
                       initialEventId: sampleDetailNavigation.event,
+                      topOffset: tabsHeight,
                       running: running2,
                       scrollRef
                     },
@@ -62317,6 +62330,7 @@ ${events}
                       id: `${baseId}-chat-${id}`,
                       messages: sampleMessages,
                       initialMessageId: sampleDetailNavigation.message,
+                      topOffset: tabsHeight,
                       indented: true,
                       scrollRef,
                       toolCallStyle: "complete",
