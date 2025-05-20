@@ -45764,6 +45764,9 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
           resolvedMessages.push({ message: message2, toolMessages: [] });
         }
         if (message2.id === void 0) {
+          if (typeof message2 === "string") {
+            debugger;
+          }
           message2.id = `msg-${index}`;
         }
         index++;
@@ -45849,14 +45852,14 @@ Please change the parent <Route path="${parentPath}"> to <Route path="${parentPa
           false,
           {
             fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/chat/ChatView.tsx",
-            lineNumber: 36,
+            lineNumber: 37,
             columnNumber: 11
           },
           void 0
         );
       }) }, void 0, false, {
         fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/chat/ChatView.tsx",
-        lineNumber: 31,
+        lineNumber: 32,
         columnNumber: 5
       }, void 0);
       return result2;
@@ -74414,6 +74417,13 @@ ${events}
       render: (_changes, resolvedState) => {
         const messages = resolvedState["messages"];
         const message2 = messages[0];
+        if (typeof message2 !== "object" || !message2) {
+          return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(jsxDevRuntimeExports.Fragment, {}, void 0, false, {
+            fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
+            lineNumber: 39,
+            columnNumber: 14
+          }, void 0);
+        }
         return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
           ChatView,
           {
@@ -74424,7 +74434,7 @@ ${events}
           false,
           {
             fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-            lineNumber: 39,
+            lineNumber: 42,
             columnNumber: 7
           },
           void 0
@@ -74514,7 +74524,7 @@ ${events}
           false,
           {
             fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-            lineNumber: 130,
+            lineNumber: 133,
             columnNumber: 7
           },
           void 0
@@ -74543,7 +74553,7 @@ ${events}
       if (resolvedState.tool_choice && hasToolChoice) {
         toolsInfo["Tool Choice"] = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("span", { className: clsx("text-size-smaller"), children: toolName(resolvedState.tool_choice) }, void 0, false, {
           fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-          lineNumber: 176,
+          lineNumber: 179,
           columnNumber: 7
         }, void 0);
       }
@@ -74552,7 +74562,7 @@ ${events}
         if (toolIndexes.length === 0) {
           toolsInfo["Tools"] = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Tools, { toolDefinitions: resolvedState.tools }, void 0, false, {
             fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-            lineNumber: 187,
+            lineNumber: 190,
             columnNumber: 9
           }, void 0);
         } else {
@@ -74561,7 +74571,7 @@ ${events}
           });
           toolsInfo["Tools"] = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Tools, { toolDefinitions: filtered }, void 0, false, {
             fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-            lineNumber: 193,
+            lineNumber: 196,
             columnNumber: 28
           }, void 0);
         }
@@ -74582,7 +74592,7 @@ ${events}
             false,
             {
               fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-              lineNumber: 202,
+              lineNumber: 205,
               columnNumber: 13
             },
             void 0
@@ -74590,12 +74600,12 @@ ${events}
           toolsInfo[key2]
         ] }, key2, true, {
           fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-          lineNumber: 201,
+          lineNumber: 204,
           columnNumber: 11
         }, void 0);
       }) }, "state-diff-tools", false, {
         fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-        lineNumber: 198,
+        lineNumber: 201,
         columnNumber: 5
       }, void 0);
     };
@@ -74623,7 +74633,7 @@ ${events}
             false,
             {
               fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-              lineNumber: 234,
+              lineNumber: 237,
               columnNumber: 9
             },
             void 0
@@ -74656,14 +74666,14 @@ ${events}
           false,
           {
             fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-            lineNumber: 290,
+            lineNumber: 293,
             columnNumber: 11
           },
           void 0
         );
       }) }, void 0, false, {
         fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-        lineNumber: 283,
+        lineNumber: 286,
         columnNumber: 5
       }, void 0);
     };
@@ -74671,7 +74681,7 @@ ${events}
       const functionCall = toolArgs && toolArgs.length > 0 ? `${toolName}(${toolArgs.join(", ")})` : toolName;
       return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("code", { className: clsx("text-size-smallest", styles$i.tool), children: functionCall }, void 0, false, {
         fileName: "/Users/charlesteague/Development/inspect_ai/src/inspect_ai/_view/www/src/app/samples/transcript/state/StateEventRenderers.tsx",
-        lineNumber: 315,
+        lineNumber: 318,
         columnNumber: 5
       }, void 0);
     };
