@@ -54898,6 +54898,7 @@ self.onmessage = function (e) {
             removeNodeVisitor("store"),
             removeNodeVisitor("approval"),
             removeNodeVisitor("input"),
+            removeNodeVisitor("sandbox"),
             // Strip the sandbox wrapper (and children)
             removeStepSpanNameVisitor(kSandboxSignalName),
             // Remove child events for scorers
