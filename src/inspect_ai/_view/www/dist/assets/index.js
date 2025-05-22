@@ -52352,7 +52352,11 @@ self.onmessage = function (e) {
           pathIndices.length = currentDepth + 1;
         }
         const idPath = pathIndices.slice(0, currentDepth + 1).join(".");
-        const node2 = new EventNode(idPath, event, currentDepth + depth);
+        const node2 = new EventNode(
+          `event_node_${idPath}`,
+          event,
+          currentDepth + depth
+        );
         if (stack2.length > 0) {
           const parentNode = stack2[stack2.length - 1];
           parentNode.children.push(node2);
@@ -54649,14 +54653,14 @@ self.onmessage = function (e) {
       }
       return { package: "", module: name2 };
     };
-    const eventRow = "_eventRow_x0z4b_1";
-    const selected$1 = "_selected_x0z4b_8";
-    const toggle = "_toggle_x0z4b_12";
-    const eventLink = "_eventLink_x0z4b_17";
-    const label$5 = "_label_x0z4b_28";
-    const icon = "_icon_x0z4b_38";
-    const progress$2 = "_progress_x0z4b_42";
-    const popover = "_popover_x0z4b_46";
+    const eventRow = "_eventRow_1vspp_1";
+    const selected$1 = "_selected_1vspp_8";
+    const toggle = "_toggle_1vspp_12";
+    const eventLink = "_eventLink_1vspp_17";
+    const label$5 = "_label_1vspp_28";
+    const icon = "_icon_1vspp_34";
+    const progress$2 = "_progress_1vspp_38";
+    const popover = "_popover_1vspp_42";
     const styles$y = {
       eventRow,
       selected: selected$1,
@@ -55050,7 +55054,14 @@ self.onmessage = function (e) {
       const renderRow = reactExports.useCallback(
         (index2, node2) => {
           if (node2 === EventPaddingNode) {
-            return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: styles$x.eventPadding }, node2.id);
+            return /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: styles$x.eventPadding,
+                style: { height: "2em" }
+              },
+              node2.id
+            );
           } else {
             return /* @__PURE__ */ jsxRuntimeExports.jsx(
               OutlineRow,
@@ -55256,7 +55267,7 @@ self.onmessage = function (e) {
       dongleIcon
     };
     const EventPanel = ({
-      id,
+      eventNodeId,
       depth,
       className: className2,
       title: title2,
@@ -55270,23 +55281,27 @@ self.onmessage = function (e) {
     }) => {
       const [collapsed2, setCollapsed] = useCollapseSampleEvent(
         kTranscriptCollapseScope,
-        id
+        eventNodeId
       );
       const isCollapsible = (childIds || []).length > 0 || collapsibleContent;
       const useBottomDongle = isCollapsible && collapseControl === "bottom";
       const { logPath, sampleId, epoch } = useParams();
-      const url = logPath && supportsLinking() ? toFullUrl(sampleEventUrl(id, logPath, sampleId, epoch)) : void 0;
+      const url = logPath && supportsLinking() ? toFullUrl(sampleEventUrl(eventNodeId, logPath, sampleId, epoch)) : void 0;
       const pillId = (index2) => {
-        return `${id}-nav-pill-${index2}`;
+        return `${eventNodeId}-nav-pill-${index2}`;
       };
       const filteredArrChildren = (Array.isArray(children2) ? children2 : [children2]).filter((child) => !!child);
       const defaultPill = filteredArrChildren.findIndex((node2) => {
         return hasDataDefault(node2) && node2.props["data-default"];
       });
       const defaultPillId = defaultPill !== -1 ? pillId(defaultPill) : pillId(0);
-      const [selectedNav, setSelectedNav] = useProperty(id, "selectedNav", {
-        defaultValue: defaultPillId
-      });
+      const [selectedNav, setSelectedNav] = useProperty(
+        eventNodeId,
+        "selectedNav",
+        {
+          defaultValue: defaultPillId
+        }
+      );
       const gridColumns2 = [];
       if (isCollapsible && !useBottomDongle) {
         gridColumns2.push("minmax(0, max-content)");
@@ -55368,7 +55383,7 @@ self.onmessage = function (e) {
                   const defaultTitle = `Tab ${index2}`;
                   const title22 = child && reactExports.isValidElement(child) ? child.props["data-name"] || defaultTitle : defaultTitle;
                   return {
-                    id: `eventpanel-${id}-${index2}`,
+                    id: `eventpanel-${eventNodeId}-${index2}`,
                     title: title22,
                     target: pillId(index2)
                   };
@@ -55383,7 +55398,7 @@ self.onmessage = function (e) {
       const card2 = /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
-          id,
+          id: `event-panel-${eventNodeId}`,
           className: clsx(
             className2,
             styles$s.card,
@@ -55400,16 +55415,16 @@ self.onmessage = function (e) {
                   isCollapsible && collapsed2 && collapsibleContent ? styles$s.hidden : void 0
                 ),
                 children: filteredArrChildren == null ? void 0 : filteredArrChildren.map((child, index2) => {
-                  const id2 = pillId(index2);
-                  const isSelected = id2 === selectedNav;
+                  const id = pillId(index2);
+                  const isSelected = id === selectedNav;
                   return /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "div",
                     {
-                      id: id2,
+                      id,
                       className: clsx("tab-pane", "show", isSelected ? "active" : ""),
                       children: child
                     },
-                    `children-${id2}-${index2}`
+                    `children-${id}-${index2}`
                   );
                 })
               }
@@ -55450,11 +55465,10 @@ self.onmessage = function (e) {
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: "Error",
           className: className2,
@@ -55499,7 +55513,7 @@ self.onmessage = function (e) {
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id: eventNode.id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: "Info" + (event.source ? ": " + event.source : ""),
           className: className2,
@@ -55514,11 +55528,10 @@ self.onmessage = function (e) {
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: "Input",
           className: className2,
@@ -55741,7 +55754,7 @@ self.onmessage = function (e) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         EventPanel,
         {
-          id: eventNode.id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           className: className2,
           title: formatTitle(panelTitle, totalUsage, callTime),
@@ -55888,7 +55901,7 @@ self.onmessage = function (e) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         EventPanel,
         {
-          id: eventNode.id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           className: className2,
           title: "Sample",
@@ -55964,7 +55977,7 @@ self.onmessage = function (e) {
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id: eventNode.id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: title2,
           icon: icon2,
@@ -55990,17 +56003,16 @@ self.onmessage = function (e) {
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           className: className2,
           title: `Sandbox: ${event.action}`,
           icon: ApplicationIcons.sandbox,
           subTitle: formatTiming(event.timestamp, event.working_start),
-          children: event.action === "exec" ? /* @__PURE__ */ jsxRuntimeExports.jsx(ExecView, { id: `${id}-exec`, event }) : event.action === "read_file" ? /* @__PURE__ */ jsxRuntimeExports.jsx(ReadFileView, { id: `${id}-read-file`, event }) : /* @__PURE__ */ jsxRuntimeExports.jsx(WriteFileView, { id: `${id}-write-file`, event })
+          children: event.action === "exec" ? /* @__PURE__ */ jsxRuntimeExports.jsx(ExecView, { id: `${eventNode.id}-exec`, event }) : event.action === "read_file" ? /* @__PURE__ */ jsxRuntimeExports.jsx(ReadFileView, { id: `${eventNode.id}-read-file`, event }) : /* @__PURE__ */ jsxRuntimeExports.jsx(WriteFileView, { id: `${eventNode.id}-write-file`, event })
         }
       );
     };
@@ -56080,7 +56092,7 @@ self.onmessage = function (e) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         EventPanel,
         {
-          id: eventNode.id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: (event.intermediate ? "Intermediate " : "") + "Score",
           className: clsx(className2, "text-size-small"),
@@ -63315,7 +63327,6 @@ ${events}
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       const summary2 = reactExports.useMemo(() => {
         return summarizeChanges(event.changes);
       }, [event.changes]);
@@ -63338,13 +63349,13 @@ ${events}
       const collapseEvent = useStore((state) => state.sampleActions.collapseEvent);
       reactExports.useEffect(() => {
         if (changePreview === void 0) {
-          collapseEvent(kTranscriptCollapseScope, id, true);
+          collapseEvent(kTranscriptCollapseScope, eventNode.id, true);
         }
       }, [changePreview, collapseEvent]);
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: title2,
           className: className2,
@@ -63566,14 +63577,13 @@ ${events}
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       const descriptor = stepDescriptor(event);
       const title2 = descriptor.name || `${event.type ? event.type + ": " : "Step: "}${event.name}`;
       const text2 = summarize$1(children2);
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           childIds: children2.map((child) => child.id),
           className: clsx("transcript-step", className2),
@@ -63697,7 +63707,6 @@ ${events}
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       const body2 = [];
       if (event.type === "fork") {
         body2.push(
@@ -63722,7 +63731,7 @@ ${events}
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           className: className2,
           title: formatTitle(
@@ -63781,7 +63790,6 @@ ${events}
     }) => {
       var _a2, _b2;
       const event = eventNode.event;
-      const id = eventNode.id;
       const { input: input2, functionCall, highlightLanguage } = reactExports.useMemo(
         () => resolveToolInput(event.function, event.arguments),
         [event.function, event.arguments]
@@ -63802,7 +63810,7 @@ ${events}
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           title: formatTitle(title2, void 0, event.working_time),
           className: className2,
@@ -63814,7 +63822,7 @@ ${events}
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               ToolCallView,
               {
-                id: `${id}-tool-call`,
+                id: `${eventNode.id}-tool-call`,
                 functionCall,
                 input: input2,
                 highlightLanguage,
@@ -63826,7 +63834,7 @@ ${events}
             lastModelNode ? /* @__PURE__ */ jsxRuntimeExports.jsx(
               ChatView,
               {
-                id: `${id}-toolcall-chatmessage`,
+                id: `${eventNode.id}-toolcall-chatmessage`,
                 messages: lastModelNode.event.output.choices.map((m) => m.message),
                 numbered: false,
                 toolCallStyle: "compact"
@@ -63850,14 +63858,13 @@ ${events}
       className: className2
     }) => {
       const event = eventNode.event;
-      const id = eventNode.id;
       const descriptor = spanDescriptor(event);
       const title2 = descriptor.name || `${event.type ? event.type + ": " : "Step: "}${event.name}`;
       const text2 = summarize(children2);
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         EventPanel,
         {
-          id,
+          eventNodeId: eventNode.id,
           depth: eventNode.depth,
           childIds: children2.map((child) => child.id),
           className: clsx("transcript-span", className2),
@@ -64287,7 +64294,8 @@ ${events}
                       className: clsx(styles$w.outline),
                       eventNodes,
                       running: running2,
-                      defaultCollapsedIds
+                      defaultCollapsedIds,
+                      scrollRef
                     }
                   ),
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
