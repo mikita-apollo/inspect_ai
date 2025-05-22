@@ -55145,6 +55145,7 @@ self.onmessage = function (e) {
       return results;
     };
     const kCollapseScope = "transcript-outline";
+    const kFramesToStabilize = 10;
     const EventPaddingNode = {
       id: "padding",
       event: {
@@ -55179,11 +55180,34 @@ self.onmessage = function (e) {
         (state) => state.sampleActions.setSelectedOutlineId
       );
       const sampleDetailNavigation = useSampleDetailNavigation();
+      const isProgrammaticScrolling = reactExports.useRef(false);
+      const lastScrollPosition = reactExports.useRef(null);
+      const stableFrameCount = reactExports.useRef(0);
       reactExports.useEffect(() => {
         if (sampleDetailNavigation.event) {
+          isProgrammaticScrolling.current = true;
+          lastScrollPosition.current = null;
+          stableFrameCount.current = 0;
           setSelectedOutlineId(sampleDetailNavigation.event);
+          const checkScrollStabilized = () => {
+            var _a2;
+            if (!isProgrammaticScrolling.current) return;
+            const currentPosition = ((_a2 = scrollRef == null ? void 0 : scrollRef.current) == null ? void 0 : _a2.scrollTop) ?? null;
+            if (currentPosition === lastScrollPosition.current) {
+              stableFrameCount.current++;
+              if (stableFrameCount.current >= kFramesToStabilize) {
+                isProgrammaticScrolling.current = false;
+                return;
+              }
+            } else {
+              stableFrameCount.current = 0;
+              lastScrollPosition.current = currentPosition;
+            }
+            requestAnimationFrame(checkScrollStabilized);
+          };
+          requestAnimationFrame(checkScrollStabilized);
         }
-      }, [sampleDetailNavigation.event]);
+      }, [sampleDetailNavigation.event, setSelectedOutlineId, scrollRef]);
       const flattenedNodes = reactExports.useMemo(() => {
         const nodeList = flatTree(
           eventNodes,
@@ -55209,7 +55233,9 @@ self.onmessage = function (e) {
       useScrollTracking(
         outlineIds,
         (id2) => {
-          setSelectedOutlineId(id2);
+          if (!isProgrammaticScrolling.current) {
+            setSelectedOutlineId(id2);
+          }
         },
         scrollRef
       );
